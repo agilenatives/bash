@@ -1,0 +1,16 @@
+name: docker
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - run: echo ${DOCKERHUB_TOKEN} | docker login --username agilenatives --password-stdin
+      env:
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    - run: docker build . --file Dockerfile --tag agilenatives/bash:latest
+    - run: docker push agilenatives/bash:latest
